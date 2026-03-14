@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Convert — ImageKit Pro{% endblock %}
+{% block page_title %}Format Converter{% endblock %}
+{% block page_subtitle %}Batch convert images between PNG, JPEG, and WebP formats.{% endblock %}
+
+{% block content %}
+<section class="card">
+    <h2>Select Images</h2>
+    <div class="button-row">
+        <button id="convert-pick-single" class="btn btn-secondary" type="button">Single Image</button>
+        <button id="convert-pick-multiple" class="btn btn-secondary" type="button">Multiple Images</button>
+        <button id="convert-pick-folder" class="btn btn-secondary" type="button">Entire Folder</button>
+    </div>
+
+    <div class="selection-summary">
+        <span id="convert-selection-count">No images selected</span>
+        <ul id="convert-selection-list"></ul>
+    </div>
+
+    <div class="preview-block">
+        <h3>Preview</h3>
+        <p id="convert-selected-preview-note" class="preview-note">No selected image previews yet.</p>
+        <div id="convert-selected-preview-grid" class="preview-grid"></div>
+    </div>
+</section>
+
+<section class="card">
+    <h2>Configure</h2>
+
+    <label for="convert-format">Target Format</label>
+    <select id="convert-format">
+        <option value="PNG">PNG</option>
+        <option value="JPEG">JPEG</option>
+        <option value="WEBP">WebP</option>
+    </select>
+
+    <div id="convert-quality-row" class="quality-row hidden">
+        <label for="convert-quality" style="margin:0; min-width: 52px;">Quality</label>
+        <input id="convert-quality" type="range" min="1" max="100" value="85">
+        <span id="convert-quality-value" class="quality-value">85</span>
+    </div>
+
+    <button id="convert-process-btn" class="btn btn-primary process-action" type="button">Convert Images</button>
+</section>
+
+<section class="card">
+    <h2>Progress</h2>
+    <div class="progress-wrap">
+        <div id="convert-progress-fill" class="progress-fill"></div>
+    </div>
+    <p id="convert-status-text">Waiting for input.</p>
+
+    <div class="stats-grid">
+        <div>
+            <span class="stats-label">Total</span>
+            <strong id="convert-total">0</strong>
+        </div>
+        <div>
+            <span class="stats-label">Converted</span>
+            <strong id="convert-success">0</strong>
+        </div>
+        <div>
+            <span class="stats-label">Errors</span>
+            <strong id="convert-errors-count">0</strong>
+        </div>
+    </div>
+
+    <p id="convert-completion-message" class="completion-message"></p>
+    <ul id="convert-error-list" class="error-list"></ul>
+
+    <div class="preview-block">
+        <h3>Output Preview</h3>
+        <p id="convert-output-preview-note" class="preview-note">No output previews yet.</p>
+        <div id="convert-output-preview-grid" class="preview-grid"></div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='convert.js') }}" defer></script>
+{% endblock %}

@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Slicer Pro{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <svg class="brand-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="3"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <path d="M21 15l-5-5L5 21"/>
+            </svg>
+            <span class="brand-name">Slicer<span class="brand-highlight">Pro</span></span>
+        </div>
+        <nav class="sidebar-nav">
+            <a class="nav-item {{ 'active' if active_page == 'crop' }}" href="/">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.13 1L6 16a2 2 0 002 2h15"/><path d="M1 6.13L16 6a2 2 0 012 2v15"/></svg>
+                <span>Grid Cutter</span>
+            </a>
+            <a class="nav-item {{ 'active' if active_page == 'rename' }}" href="/rename">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                <span>Rename</span>
+            </a>
+            <a class="nav-item {{ 'active' if active_page == 'resize' }}" href="/resize">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                <span>Resize</span>
+            </a>
+            <a class="nav-item {{ 'active' if active_page == 'convert' }}" href="/convert">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                <span>Convert</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <span class="footer-text">Made Just for fun by</span>
+            <span class="version-badge">Ayuu</span>
+        </div>
+    </aside>
+
+    <button class="mobile-menu-btn" id="mobile-menu-btn" type="button" aria-label="Toggle menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+
+    <main class="main-content">
+        <header class="page-header">
+            <h1 class="page-title">{% block page_title %}{% endblock %}</h1>
+            <p class="page-subtitle">{% block page_subtitle %}{% endblock %}</p>
+        </header>
+        <div class="page-body">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Custom cursor elements -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+    <div class="cursor-glow" id="cursor-glow"></div>
+
+    <script>
+    /* Sidebar toggle */
+    document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+        document.getElementById('sidebar').classList.toggle('open');
+    });
+    document.querySelector('.main-content').addEventListener('click', function() {
+        document.getElementById('sidebar').classList.remove('open');
+    });
+
+    /* Card radial glow — tracks mouse position for each card */
+    document.querySelectorAll('.card').forEach(function(card) {
+        card.addEventListener('mousemove', function(e) {
+            var rect = card.getBoundingClientRect();
+            card.style.setProperty('--mouse-x', ((e.clientX - rect.left) / rect.width * 100) + '%');
+            card.style.setProperty('--mouse-y', ((e.clientY - rect.top) / rect.height * 100) + '%');
+        });
+    });
+
+    /* ---- Animated custom cursor with trailing ring & glow ---- */
+    (function() {
+        var dot = document.getElementById('cursor-dot');
+        var ring = document.getElementById('cursor-ring');
+        var glow = document.getElementById('cursor-glow');
+        var mouseX = 0, mouseY = 0;
+        var dotX = 0, dotY = 0;
+        var ringX = 0, ringY = 0;
+        var glowX = 0, glowY = 0;
+        var isHovering = false;
+        var isClicking = false;
+
+        document.addEventListener('mousemove', function(e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        /* Expand ring on interactive elements */
+        document.addEventListener('mouseover', function(e) {
+            var t = e.target.closest('a, button, .btn, .cell-option, .remove-btn, .nav-item, select, input, label[for], .thumb-card');
+            if (t) {
+                isHovering = true;
+                ring.classList.add('cursor-hover');
+                dot.classList.add('cursor-hover');
+            }
+        });
+        document.addEventListener('mouseout', function(e) {
+            var t = e.target.closest('a, button, .btn, .cell-option, .remove-btn, .nav-item, select, input, label[for], .thumb-card');
+            if (t) {
+                isHovering = false;
+                ring.classList.remove('cursor-hover');
+                dot.classList.remove('cursor-hover');
+            }
+        });
+
+        /* Click pulse */
+        document.addEventListener('mousedown', function() {
+            dot.classList.add('cursor-click');
+            ring.classList.add('cursor-click');
+        });
+        document.addEventListener('mouseup', function() {
+            dot.classList.remove('cursor-click');
+            ring.classList.remove('cursor-click');
+        });
+
+        /* Smooth animation loop — dot is snappy, ring trails, glow is lazy */
+        function animate() {
+            dotX += (mouseX - dotX) * 0.35;
+            dotY += (mouseY - dotY) * 0.35;
+            ringX += (mouseX - ringX) * 0.15;
+            ringY += (mouseY - ringY) * 0.15;
+            glowX += (mouseX - glowX) * 0.07;
+            glowY += (mouseY - glowY) * 0.07;
+
+            dot.style.transform = 'translate(' + dotX + 'px, ' + dotY + 'px) translate(-50%, -50%)';
+            ring.style.transform = 'translate(' + ringX + 'px, ' + ringY + 'px) translate(-50%, -50%)' + (isHovering ? ' scale(1.6)' : '');
+            glow.style.transform = 'translate(' + glowX + 'px, ' + glowY + 'px) translate(-50%, -50%)';
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        /* Hide custom cursor when mouse leaves window */
+        document.addEventListener('mouseleave', function() {
+            dot.style.opacity = '0';
+            ring.style.opacity = '0';
+            glow.style.opacity = '0';
+        });
+        document.addEventListener('mouseenter', function() {
+            dot.style.opacity = '1';
+            ring.style.opacity = '1';
+            glow.style.opacity = '1';
+        });
+    })();
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

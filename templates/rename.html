@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Batch Rename — ImageKit Pro{% endblock %}
+{% block page_title %}Batch Rename{% endblock %}
+{% block page_subtitle %}Rename files in sequence using a pattern like <strong>Aisha_Khan_{no}.png</strong> or <strong>notes_{no}.txt</strong>.{% endblock %}
+
+{% block content %}
+<section class="card">
+    <h2>Select Files</h2>
+    <div class="button-row">
+        <button id="rename-pick-single" class="btn btn-secondary" type="button">Single File</button>
+        <button id="rename-pick-multiple" class="btn btn-secondary" type="button">Multiple Files</button>
+        <button id="rename-pick-folder" class="btn btn-secondary" type="button">Entire Folder</button>
+    </div>
+
+    <div class="selection-summary">
+        <span id="rename-selection-count">No files selected</span>
+        <ul id="rename-selection-list"></ul>
+    </div>
+</section>
+
+<section class="card">
+    <h2>Configure Pattern</h2>
+
+    <label for="rename-template">Template (must include {no})</label>
+    <input id="rename-template" class="text-input" type="text" value="Aisha_Khan_{no}.png" placeholder="Aisha_Khan_{no}.png">
+
+    <label for="rename-start-number">Start Number</label>
+    <input id="rename-start-number" class="text-input" type="number" min="1" step="1" value="1">
+
+    <button id="rename-process-btn" class="btn btn-primary process-action" type="button">Rename Files</button>
+</section>
+
+<section class="card">
+    <h2>Progress</h2>
+    <div class="progress-wrap">
+        <div id="rename-progress-fill" class="progress-fill"></div>
+    </div>
+    <p id="rename-status-text">Waiting for input.</p>
+
+    <div class="stats-grid">
+        <div>
+            <span class="stats-label">Total Files</span>
+            <strong id="rename-total-images">0</strong>
+        </div>
+        <div>
+            <span class="stats-label">Renamed</span>
+            <strong id="rename-renamed-count">0</strong>
+        </div>
+        <div>
+            <span class="stats-label">Unchanged</span>
+            <strong id="rename-unchanged-count">0</strong>
+        </div>
+    </div>
+
+    <p id="rename-completion-message" class="completion-message"></p>
+    <ul id="rename-error-list" class="error-list"></ul>
+
+    <div class="preview-block">
+        <h3>Rename Results</h3>
+        <p id="rename-preview-note" class="preview-note">No rename preview yet.</p>
+        <ul id="rename-preview-list" class="rename-preview-list"></ul>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='rename.js') }}" defer></script>
+{% endblock %}

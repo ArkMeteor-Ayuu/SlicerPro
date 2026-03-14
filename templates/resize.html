@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Resize — ImageKit Pro{% endblock %}
+{% block page_title %}Image Resizer{% endblock %}
+{% block page_subtitle %}Batch resize images by percentage, max edge length, or exact dimensions.{% endblock %}
+
+{% block content %}
+<section class="card">
+    <h2>Select Images</h2>
+    <div class="button-row">
+        <button id="resize-pick-single" class="btn btn-secondary" type="button">Single Image</button>
+        <button id="resize-pick-multiple" class="btn btn-secondary" type="button">Multiple Images</button>
+        <button id="resize-pick-folder" class="btn btn-secondary" type="button">Entire Folder</button>
+    </div>
+
+    <div class="selection-summary">
+        <span id="resize-selection-count">No images selected</span>
+        <ul id="resize-selection-list"></ul>
+    </div>
+
+    <div class="preview-block">
+        <h3>Preview</h3>
+        <p id="resize-selected-preview-note" class="preview-note">No selected image previews yet.</p>
+        <div id="resize-selected-preview-grid" class="preview-grid"></div>
+    </div>
+</section>
+
+<section class="card">
+    <h2>Configure</h2>
+
+    <label for="resize-mode">Resize Mode</label>
+    <select id="resize-mode">
+        <option value="percentage">Percentage</option>
+        <option value="max_edge">Max Edge (longest side)</option>
+        <option value="exact">Exact Dimensions</option>
+    </select>
+
+    <div id="mode-percentage" class="mode-group">
+        <label for="resize-percentage">Scale Percentage</label>
+        <div class="inline-fields">
+            <input id="resize-percentage" class="text-input" type="number" min="1" max="1000" value="50">
+            <span class="unit">%</span>
+        </div>
+    </div>
+
+    <div id="mode-max-edge" class="mode-group hidden">
+        <label for="resize-max-edge">Max Edge Length</label>
+        <div class="inline-fields">
+            <input id="resize-max-edge" class="text-input" type="number" min="1" value="1024">
+            <span class="unit">px</span>
+        </div>
+    </div>
+
+    <div id="mode-exact" class="mode-group hidden">
+        <label>Dimensions</label>
+        <div class="inline-fields">
+            <input id="resize-width" class="text-input" type="number" min="1" value="800" placeholder="Width">
+            <span class="unit">×</span>
+            <input id="resize-height" class="text-input" type="number" min="1" value="600" placeholder="Height">
+            <span class="unit">px</span>
+        </div>
+        <div class="checkbox-row">
+            <input id="resize-aspect" type="checkbox" checked>
+            <label for="resize-aspect">Maintain aspect ratio</label>
+        </div>
+    </div>
+
+    <div class="quality-row">
+        <label for="resize-quality" style="margin:0; min-width: 52px;">Quality</label>
+        <input id="resize-quality" type="range" min="1" max="100" value="90">
+        <span id="resize-quality-value" class="quality-value">90</span>
+    </div>
+
+    <button id="resize-process-btn" class="btn btn-primary process-action" type="button">Resize Images</button>
+</section>
+
+<section class="card">
+    <h2>Progress</h2>
+    <div class="progress-wrap">
+        <div id="resize-progress-fill" class="progress-fill"></div>
+    </div>
+    <p id="resize-status-text">Waiting for input.</p>
+
+    <div class="stats-grid">
+        <div>
+            <span class="stats-label">Total</span>
+            <strong id="resize-total">0</strong>
+        </div>
+        <div>
+            <span class="stats-label">Resized</span>
+            <strong id="resize-success">0</strong>
+        </div>
+        <div>
+            <span class="stats-label">Errors</span>
+            <strong id="resize-errors-count">0</strong>
+        </div>
+    </div>
+
+    <p id="resize-completion-message" class="completion-message"></p>
+    <ul id="resize-error-list" class="error-list"></ul>
+
+    <div class="preview-block">
+        <h3>Output Preview</h3>
+        <p id="resize-output-preview-note" class="preview-note">No output previews yet.</p>
+        <div id="resize-output-preview-grid" class="preview-grid"></div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='resize.js') }}" defer></script>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Grid Cutter — ImageKit Pro{% endblock %}
+{% block page_title %}Grid Cutter{% endblock %}
+{% block page_subtitle %}Split grid images into individual cells. Supports 2×2, 3×3, 4×4 or custom NxM grids.{% endblock %}
+
+{% block content %}
+<section class="card">
+    <h2>Select Images</h2>
+    <div class="button-row">
+        <button id="pick-single" class="btn btn-secondary" type="button">Single Image</button>
+        <button id="pick-multiple" class="btn btn-secondary" type="button">Multiple Images</button>
+        <button id="pick-folder" class="btn btn-secondary" type="button">Entire Folder</button>
+    </div>
+
+    <div class="selection-summary">
+        <span id="selection-count">No images selected</span>
+        <ul id="selection-list"></ul>
+    </div>
+
+    <div class="preview-block">
+        <h3>Preview</h3>
+        <p id="selected-preview-note" class="preview-note">No selected image previews yet.</p>
+        <div id="selected-preview-grid" class="preview-grid"></div>
+    </div>
+</section>
+
+<section class="card">
+    <h2>Configure</h2>
+
+    <label for="grid-size">Grid Type</label>
+    <select id="grid-size">
+        <option value="2">2 × 2 (4 crops)</option>
+        <option value="3">3 × 3 (9 crops)</option>
+        <option value="4">4 × 4 (16 crops)</option>
+        <option value="5">5 × 5 (25 crops)</option>
+        <option value="custom">Custom…</option>
+    </select>
+
+    <div id="custom-grid-row" class="custom-grid-row hidden">
+        <label>Custom Grid</label>
+        <div class="custom-grid-inputs">
+            <input id="custom-rows" class="text-input grid-input" type="number" min="1" max="12" value="2" placeholder="Rows">
+            <span class="grid-x">×</span>
+            <input id="custom-cols" class="text-input grid-input" type="number" min="1" max="12" value="3" placeholder="Cols">
+        </div>
+    </div>
+
+    <div class="archive-toggle-row">
+        <label class="archive-checkbox-label" for="archive-toggle">
+            <input id="archive-toggle" type="checkbox">
+            Send originals to archive after processing
+        </label>
+        <p class="archive-path">Path: <code>E:\testing 21\images\archive</code></p>
+    </div>
+
+    <div class="selector-toggle-row">
+        <label class="selector-checkbox-label" for="cell-selector-toggle">
+            <input id="cell-selector-toggle" type="checkbox">
+            Crop only selected cells
+        </label>
+        <p class="selector-help">Enable to pick specific cells from the grid.</p>
+    </div>
+
+    <div id="cell-selector-panel" class="cell-selector-panel hidden">
+        <p id="cell-selector-note" class="selector-note">Select one or more cells.</p>
+        <div id="cell-selector-grid" class="cell-selector-grid" aria-label="Grid cell selector"></div>
+    </div>
+
+    <button id="process-btn" class="btn btn-primary process-action" type="button">Process Images</button>
+</section>
+
+<section class="card">
+    <h2>Progress</h2>
+    <div class="progress-wrap">
+        <div id="progress-fill" class="progress-fill"></div>
+    </div>
+    <p id="status-text">Waiting for input.</p>
+
+    <div class="stats-grid">
+        <div>
+            <span class="stats-label">Processed</span>
+            <strong id="images-processed">0</strong>
+        </div>
+        <div>
+            <span class="stats-label">Successful</span>
+            <strong id="images-successful">0</strong>
+        </div>
+        <div>
+            <span class="stats-label">Crops Created</span>
+            <strong id="crops-created">0</strong>
+        </div>
+        <div>
+            <span class="stats-label">Archived</span>
+            <strong id="archived-images">0</strong>
+        </div>
+    </div>
+
+    <p id="completion-message" class="completion-message"></p>
+    <ul id="error-list" class="error-list"></ul>
+
+    <div class="preview-block">
+        <h3>Output Preview</h3>
+        <p id="output-preview-note" class="preview-note">No output previews yet.</p>
+        <div id="output-preview-grid" class="preview-grid"></div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='app.js') }}" defer></script>
+{% endblock %}
