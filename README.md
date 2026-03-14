@@ -8,7 +8,7 @@ Built with **Flask** + **Pillow** · Runs locally at `http://127.0.0.1:5000`
 
 <br>
 
-![Slicer Pro — Grid Cutter](screenshots/hero.png)
+![Slicer Pro — Grid Cutter](screenshots/.png)
 
 <br>
 
@@ -98,9 +98,10 @@ Batch convert between formats.
 |:-------------:|:----------------:|
 | ![Resize](screenshots/resize.png) | ![Convert](screenshots/convert.png) |
 
-| Mobile View |
+| Demo |
 |:-----------:|
-| ![Mobile](screenshots/mobile.png) |
+| ![Mobile](screenshots/Grid_Cutter_Demo1.png) |
+| ![Mobile](screenshots/Grid_Cutter_Demo2.png) |
 
 </div>
 
